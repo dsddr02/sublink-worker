@@ -406,7 +406,7 @@ export const SING_BOX_CONFIG = {
 			{
 				type: "fakeip",
 				tag: "dns_fakeip",
-				server: "dns_proxy",
+			
 				inet4_range: "198.18.0.0/15",
 				inet6_range: "fc00::/18"
 			}
