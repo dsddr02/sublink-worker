@@ -419,7 +419,7 @@ export const SING_BOX_CONFIG = {
 		],
 		rules: [
 			{
-				rule_set: "geosite-cn",
+				rule_set: "geolocation-cn",
 				server: "dns_resolver"
 			},
 			{
@@ -450,11 +450,7 @@ export const SING_BOX_CONFIG = {
 				],
 				server: "dns_fakeip"
 			},
-			{
-				rule_set: "geolocation-!cn", 
-				query_type: "CNAME",
-				server: "dns_proxy"  // CNAME 查询使用代理 DNS
-			},
+			
 			{
 				query_type: [
 					"A",
