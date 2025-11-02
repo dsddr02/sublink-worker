@@ -399,7 +399,7 @@ export const SING_BOX_CONFIG = {
 				domain_resolver: "dns_resolver"
 			},
 			{
-				type: "udp",
+				type: "tcp",
 				tag: "dns_resolver",
 				server: "223.5.5.5"
 			},
@@ -444,10 +444,49 @@ export const SING_BOX_CONFIG = {
 		server_port: 123,
 		interval: '30m'
 	},
-	inbounds: [
-		{ type: 'mixed', tag: 'mixed-in', listen: '0.0.0.0', listen_port: 2080 },
-		{ type: 'tun', tag: 'tun-in', address: '172.19.0.1/30', auto_route: true, strict_route: true, stack: 'mixed', sniff: true }
-	],
+	"inbounds": [
+    {
+      "tag": "dns-in",
+      "type": "direct",
+      "listen": "::",
+      "listen_port": 1053
+    },
+    {
+      "tag": "http-in",
+      "type": "http",
+      "listen": "::",
+      "listen_port": 8080
+    },
+    {
+      "tag": "socks-in",
+      "type": "socks",
+      "listen": "::",
+      "listen_port": 1080
+    },
+    {
+      "tag": "redirect-in",
+      "type": "redirect",
+      "listen": "::",
+      "listen_port": 7890
+    },
+    {
+      "tag": "tproxy-in",
+      "type": "tproxy",
+      "listen": "::",
+      "listen_port": 7891
+    },
+    {
+      "tag": "tun-in",
+      "type": "tun",
+      "interface_name": "momo",
+      "address": [
+        "172.31.0.1/30",
+        "fdfe:dcba:9876::1/126"
+      ],
+      "auto_route": false,
+      "auto_redirect": false
+    }
+  ],
 	outbounds: [
 		{ type: 'block', tag: 'REJECT' },
 		{ type: "direct", tag: 'DIRECT' }
