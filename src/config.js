@@ -444,7 +444,7 @@ export const SING_BOX_CONFIG = {
 		server_port: 123,
 		interval: '30m'
 	},
-	"inbounds": [
+	inbounds: [
     {
       "tag": "dns-in",
       "type": "direct",
@@ -504,11 +504,26 @@ export const SING_BOX_CONFIG = {
 		rules: []
 	},
 	experimental: {
-		cache_file: {
-			enabled: true,
-			store_fakeip: true
-		}
-	}
+    cache_file: {
+      "enabled": true,
+      "path": "/etc/momo/run/cache.db",
+      "store_fakeip": true
+    },
+    clash_api: {
+      "external_controller": "0.0.0.0:9095",
+      "external_ui": "/etc/momo/run/ui",
+      "external_ui_download_url": "https://gh-proxy.com/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip",
+      "external_ui_download_detour": "🎯 全球直连",
+      "secret": "",
+      "default_mode": "rule"
+	 }
+	},
+	"log": {
+    "disabled": true,
+    "level": "info",
+    "timestamp": true
+  }
+
 };
 
 export const CLASH_CONFIG = {
