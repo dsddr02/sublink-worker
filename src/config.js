@@ -390,11 +390,13 @@ export const SING_BOX_CONFIG = {
 				tag: "dns_proxy",
 				server: "1.1.1.1",
 				detour: "🚀 节点选择"
+				// 移除 domain_resolver，让代理 DNS 直接使用代理出站
 			},
 			{
 				type: "https",
 				tag: "dns_direct",
-				server: "dns.alidns.com"
+				server: "dns.alidns.com",
+				domain_resolver: "dns_resolver"  // 直连 DNS 使用 resolver
 			},
 			{
 				type: "tcp",
@@ -412,6 +414,7 @@ export const SING_BOX_CONFIG = {
 				type: "https",
 				server: "8.8.8.8",
 				detour: "🚀 节点选择"
+				// 移除 domain_resolver，让代理 DNS 直接使用代理出站
 			}
 		],
 		rules: [
@@ -450,7 +453,7 @@ export const SING_BOX_CONFIG = {
 			{
 				rule_set: "geolocation-!cn", 
 				query_type: "CNAME",
-				server: "dns_proxy"
+				server: "dns_proxy"  // CNAME 查询使用代理 DNS
 			},
 			{
 				query_type: [
@@ -471,11 +474,10 @@ export const SING_BOX_CONFIG = {
 				rcode: "REFUSED"
 			}
 		],
-		final: "foreign",
-		strategy: "ipv4_only",
-		independent_cache: true,
-		reverse_mapping: true
+		final: "dns_direct",  // 改回原来的 final
+		independent_cache: true
 	},
+	// ... 其他配置保持不变
 	ntp: {
 		enabled: true,
 		server: 'time.apple.com',
