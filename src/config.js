@@ -406,17 +406,11 @@ export const SING_BOX_CONFIG = {
 			{
 				type: "fakeip",
 				tag: "dns_fakeip",
+				server: "dns_proxy",
 				inet4_range: "198.18.0.0/15",
 				inet6_range: "fc00::/18"
-			},
-			{
-				tag: "foreign",
-				type: "https",
-				server: "8.8.8.8",
-				detour: "🚀 节点选择"
-				// 移除 domain_resolver，让代理 DNS 直接使用代理出站
 			}
-		],
+			
 		rules: [
 			{
 				rule_set: "geolocation-cn",
@@ -430,17 +424,14 @@ export const SING_BOX_CONFIG = {
 				clash_mode: "global", 
 				server: "dns_fakeip"
 			},
-			{
-				query_type: "HTTPS",
-				action: "reject"
-			},
+			
 			{
 				domain_suffix: [
 					"services.googleapis.cn",
 					"googleapis.cn", 
 					"xn--ngstr-lra8j.com"
 				],
-				server: "foreign"
+				server: "dns_proxy"
 			},
 			{
 				rule_set: "geolocation-!cn",
@@ -470,7 +461,7 @@ export const SING_BOX_CONFIG = {
 				rcode: "REFUSED"
 			}
 		],
-		final: "dns_direct",  // 改回原来的 final
+		final: "dns_proxy",  // 改回原来的 final
 		independent_cache: true
 	},
 	// ... 其他配置保持不变
