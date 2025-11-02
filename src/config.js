@@ -390,13 +390,11 @@ export const SING_BOX_CONFIG = {
 				tag: "dns_proxy",
 				server: "1.1.1.1",
 				detour: "🚀 节点选择"
-			
 			},
 			{
 				type: "https",
 				tag: "dns_direct",
 				server: "dns.alidns.com"
-				
 			},
 			{
 				type: "tcp",
@@ -408,9 +406,39 @@ export const SING_BOX_CONFIG = {
 				tag: "dns_fakeip",
 				inet4_range: "198.18.0.0/15",
 				inet6_range: "fc00::/18"
+			},
+			{
+				tag: "foreign",
+				type: "https",
+				server: "8.8.8.8",
+				detour: "🚀 节点选择"
 			}
 		],
 		rules: [
+			{
+				rule_set: "geosite-cn",
+				server: "dns_resolver"
+			},
+			{
+				clash_mode: "direct",
+				server: "dns_resolver"
+			},
+			{
+				clash_mode: "global", 
+				server: "dns_fakeip"
+			},
+			{
+				query_type: "HTTPS",
+				action: "reject"
+			},
+			{
+				domain_suffix: [
+					"services.googleapis.cn",
+					"googleapis.cn", 
+					"xn--ngstr-lra8j.com"
+				],
+				server: "foreign"
+			},
 			{
 				rule_set: "geolocation-!cn",
 				query_type: [
@@ -420,23 +448,33 @@ export const SING_BOX_CONFIG = {
 				server: "dns_fakeip"
 			},
 			{
-				rule_set: "geolocation-!cn",
+				rule_set: "geolocation-!cn", 
 				query_type: "CNAME",
 				server: "dns_proxy"
 			},
 			{
 				query_type: [
 					"A",
-					"AAAA",
+					"AAAA"
+				],
+				server: "dns_fakeip",
+				rewrite_ttl: 1
+			},
+			{
+				query_type: [
+					"A",
+					"AAAA", 
 					"CNAME"
 				],
 				invert: true,
-				action: "predefined",
+				action: "predefined", 
 				rcode: "REFUSED"
 			}
 		],
-		final: "dns_direct",
-		independent_cache: true
+		final: "foreign",
+		strategy: "ipv4_only",
+		independent_cache: true,
+		reverse_mapping: true
 	},
 	ntp: {
 		enabled: true,
@@ -445,85 +483,83 @@ export const SING_BOX_CONFIG = {
 		interval: '30m'
 	},
 	inbounds: [
-    {
-      "tag": "dns-in",
-      "type": "direct",
-      "listen": "::",
-      "listen_port": 1053
-    },
-    {
-      "tag": "http-in",
-      "type": "http",
-      "listen": "::",
-      "listen_port": 8080
-    },
-    {
-      "tag": "socks-in",
-      "type": "socks",
-      "listen": "::",
-      "listen_port": 1080
-    },
-    {
-      "tag": "redirect-in",
-      "type": "redirect",
-      "listen": "::",
-      "listen_port": 7890
-    },
-    {
-      "tag": "tproxy-in",
-      "type": "tproxy",
-      "listen": "::",
-      "listen_port": 7891
-    },
-    {
-      "tag": "tun-in",
-      "type": "tun",
-      "interface_name": "momo",
-      "address": [
-        "172.31.0.1/30",
-        "fdfe:dcba:9876::1/126"
-      ],
-      "auto_route": false,
-      "auto_redirect": false
-    }
-  ],
+		{
+			tag: "dns-in",
+			type: "direct",
+			listen: "::",
+			listen_port: 1053
+		},
+		{
+			tag: "http-in",
+			type: "http", 
+			listen: "::",
+			listen_port: 8080
+		},
+		{
+			tag: "socks-in",
+			type: "socks",
+			listen: "::",
+			listen_port: 1080
+		},
+		{
+			tag: "redirect-in",
+			type: "redirect",
+			listen: "::", 
+			listen_port: 7890
+		},
+		{
+			tag: "tproxy-in",
+			type: "tproxy",
+			listen: "::",
+			listen_port: 7891
+		},
+		{
+			tag: "tun-in",
+			type: "tun",
+			interface_name: "momo",
+			address: [
+				"172.31.0.1/30",
+				"fdfe:dcba:9876::1/126"
+			],
+			auto_route: false,
+			auto_redirect: false
+		},
+		{ 
+			type: 'mixed', 
+			tag: 'mixed-in', 
+			listen: '0.0.0.0', 
+			listen_port: 2080 
+		}
+	],
 	outbounds: [
 		{ type: 'block', tag: 'REJECT' },
 		{ type: "direct", tag: 'DIRECT' }
 	],
-	route : {
+	route: {
 		default_domain_resolver: "dns_resolver",
-		"rule_set": [
-            {
-                "tag": "geosite-geolocation-!cn",
-                "type": "local",
-                "format": "binary",
-                "path": "geosite-geolocation-!cn.srs"
-            }
-		],
+		rule_set: [],
 		rules: []
 	},
 	experimental: {
-    cache_file: {
-      "enabled": true,
-      "path": "/etc/momo/run/cache.db",
-      "store_fakeip": true
-    },
-    clash_api: {
-      "external_controller": "0.0.0.0:9095",
-      "external_ui": "/etc/momo/run/ui",
-      "external_ui_download_url": "https://gh-proxy.com/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip",
-      "external_ui_download_detour": "🎯 全球直连",
-      "secret": "",
-      "default_mode": "rule"
-	 }
+		cache_file: {
+			enabled: true,
+			path: "/etc/momo/run/cache.db",
+			store_fakeip: true
+		},
+		clash_api: {
+			external_controller: "0.0.0.0:9095",
+			external_ui: "/etc/momo/run/ui",
+			external_ui_download_url: "https://gh-proxy.com/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip",
+			external_ui_download_detour: "DIRECT",
+			secret: "",
+			default_mode: "rule"
+		}
 	},
-	"log": {
-    "disabled": true,
-    "level": "info",
-    "timestamp": true
-  }
-
+	log: {
+		disabled: true,
+		level: "info",
+		timestamp: true
+	}
 };
 
 export const CLASH_CONFIG = {
