@@ -386,17 +386,17 @@ export const SING_BOX_CONFIG = {
 	dns: {
 		servers: [
 			{
-				type: "tcp",
+				type: "https",
 				tag: "dns_proxy",
 				server: "1.1.1.1",
-				detour: "🚀 节点选择",
-				domain_resolver: "dns_resolver"
+				detour: "🚀 节点选择"
+			
 			},
 			{
 				type: "https",
 				tag: "dns_direct",
-				server: "dns.alidns.com",
-				domain_resolver: "dns_resolver"
+				server: "dns.alidns.com"
+				
 			},
 			{
 				type: "tcp",
